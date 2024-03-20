@@ -1,0 +1,34 @@
+<div class="home-container">
+  <h1>Willkommen bei ContactCircle!</h1>
+  <p>
+    ContactCircle ist eine Plattform, die Ihnen hilft, Ihre Kontakte zu
+    verwalten und Ihr Netzwerk effektiv aufzubauen. Desweiteren sehen Sie einen
+    Einblick in die geplanten Features
+  </p>
+
+  <!-- Hervorgehobene Funktionen -->
+  <div class="highlighted-feature">
+    @for (feature of features; track $index) {
+
+    <p-card
+      [routerLink]="['/contacts']"
+      routerLinkActive="router-link-active"
+      class="feature-card"
+      header="{{ feature.title }}"
+      [class]="feature.disabled ? 'disabled' : 'enabled'"
+    >
+      @if (feature.icon) {
+      <ng-template pTemplate="header">
+        <i [class]="feature.icon"></i>
+      </ng-template>
+      }
+
+      <p class="m-0">
+        {{ feature.description }}
+      </p>
+    </p-card>
+    }
+
+    <!-- Weitere Funktionen hinzufügen -->
+  </div>
+</div>
