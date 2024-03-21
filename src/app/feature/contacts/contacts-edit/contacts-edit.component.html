@@ -1,0 +1,89 @@
+<p-card header="Kontakt hinzufügen">
+  @if(errorMessage().length) {
+
+  <p-messages
+    [(value)]="errorMessageValue"
+    (valueChange)="onMessageClose($event)"
+    [enableService]="false"
+  ></p-messages>
+  }
+  <form [formGroup]="contactForm">
+    <div class="flex">
+      <div class="flex flex-column gap-2">
+        <label class="p-float-label" for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          aria-describedby="email-help"
+        />
+        @if(contactForm.get('email')?.invalid &&
+        contactForm.get('email')?.errors && contactForm.get('email')?.dirty ||
+        contactForm.get('email')?.touched) {
+        @if(contactForm.get('email')?.hasError('email') ) {
+        <small id="email-error">Please enter a valid email address.</small>
+        } }
+      </div>
+    </div>
+    <!-- Add other fields here based on your model -->
+    <div class="flex flex-column md:flex-row gap-3">
+      <div>
+        <label class="p-float-label" for="firstName">Vorname</label>
+        <input
+          pInputText
+          id="firstName"
+          formControlName="firstName"
+          aria-describedby="firstName-help"
+        />
+      </div>
+      <div>
+        <label class="p-float-label" for="lastName">Nachname</label>
+        <input
+          pInputText
+          id="lastName"
+          formControlName="lastName"
+          aria-describedby="surname-help"
+        />
+      </div>
+      <div>
+        <label class="p-float-label" for="nickname">Spitzname</label>
+        <input
+          pInputText
+          id="nickname"
+          formControlName="nickname"
+          aria-describedby="nickname-help"
+        />
+      </div>
+    </div>
+    <div class="flex flex-column md:flex-row gap-3">
+      <div>
+        <label class="p-float-label" for="phone">Telefon</label>
+        <input
+          pInputText
+          id="phone"
+          formControlName="phone"
+          aria-describedby="phone-help"
+        />
+      </div>
+      <div>
+        <label class="p-float-label" for="phone2">Telefon 2</label>
+        <input
+          pInputText
+          id="phone2"
+          formControlName="phone2"
+          aria-describedby="phone2-help"
+        />
+      </div>
+    </div>
+
+
+    <button
+      pButton
+      type="button"
+      label="Save"
+      [disabled]="contactForm.invalid"
+      class="p-button-success"
+      (click)="onSaveButtonClick()"
+    ></button>
+  </form>
+</p-card>

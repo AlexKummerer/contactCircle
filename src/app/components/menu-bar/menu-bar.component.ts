@@ -27,7 +27,7 @@ export class MenuBarComponent implements OnInit {
   ngOnInit() {
     this.menuItems = [
       { label: 'Startseite', icon: PrimeIcons.HOME, routerLink: '/' },
-      { label: 'Kontakte', icon:  PrimeIcons.USERS, routerLink: '/kontakte' , disabled: true},
+      { label: 'Kontakte', icon:  PrimeIcons.USERS, routerLink: '/contacts' },
       { label: 'Protokolle', icon: PrimeIcons.FILE, routerLink: '/protokolle' ,disabled: true},
       { label: 'Termine', icon: PrimeIcons.CALENDAR, routerLink: '/termine' ,disabled: true},
       { label: 'Aufgaben', icon: PrimeIcons.CHECK, routerLink: '/aufgaben' ,disabled: true},
