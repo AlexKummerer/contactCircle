@@ -11,12 +11,7 @@
     <div class="flex">
       <div class="flex flex-column gap-2">
         <label class="p-float-label" for="email">Email</label>
-        <input
-          pInputText
-          id="email"
-          formControlName="email"
-          aria-describedby="email-help"
-        />
+        <input pInputText id="email" formControlName="email" />
         @if(contactForm.get('email')?.invalid &&
         contactForm.get('email')?.errors && contactForm.get('email')?.dirty ||
         contactForm.get('email')?.touched) {
@@ -29,53 +24,95 @@
     <div class="flex flex-column md:flex-row gap-3">
       <div>
         <label class="p-float-label" for="firstName">Vorname</label>
-        <input
-          pInputText
-          id="firstName"
-          formControlName="firstName"
-          aria-describedby="firstName-help"
-        />
+        <input pInputText id="firstName" formControlName="firstName" />
       </div>
       <div>
         <label class="p-float-label" for="lastName">Nachname</label>
-        <input
-          pInputText
-          id="lastName"
-          formControlName="lastName"
-          aria-describedby="surname-help"
-        />
+        <input pInputText id="lastName" formControlName="lastName" />
       </div>
       <div>
         <label class="p-float-label" for="nickname">Spitzname</label>
-        <input
-          pInputText
-          id="nickname"
-          formControlName="nickname"
-          aria-describedby="nickname-help"
-        />
+        <input pInputText id="nickname" formControlName="nickname" />
       </div>
     </div>
     <div class="flex flex-column md:flex-row gap-3">
       <div>
         <label class="p-float-label" for="phone">Telefon</label>
-        <input
-          pInputText
-          id="phone"
-          formControlName="phone"
-          aria-describedby="phone-help"
-        />
+        <input pInputText id="phone" formControlName="phone" />
       </div>
       <div>
         <label class="p-float-label" for="phone2">Telefon 2</label>
-        <input
-          pInputText
-          id="phone2"
-          formControlName="phone2"
-          aria-describedby="phone2-help"
-        />
+        <input pInputText id="phone2" formControlName="phone2" />
       </div>
     </div>
+    <div class="flex flex-column md:flex-row gap-3">
+      <div>
+        <label class="p-float-label" for="birthdate">Geburtsdatum</label>
+        <p-calendar
+          [(ngModel)]="birthdate"
+          formControlName="birthdate"
+          [showIcon]="true"
+        ></p-calendar>
 
+        <!-- <input
+          pInputText
+          id="birthDate"
+          formControlName="birthDate"
+        /> -->
+      </div>
+      <div>
+        <label class="p-float-label" for="jobStatus">Job-Status</label>
+        <p-dropdown
+          [options]="jobStatusList"
+          [(ngModel)]="selectedJobStatus"
+          formControlName="jobStatus"
+          optionLabel="label"
+          [showClear]="true"
+        ></p-dropdown>
+      </div>
+      <div>
+        <label class="p-float-label" for="gender">Geschlecht</label>
+        <p-dropdown
+          [options]="genderStatusList"
+          [(ngModel)]="selectedGenderStatus"
+          formControlName="gender"
+          optionLabel="label"
+          [showClear]="true"
+        ></p-dropdown>
+      </div>
+    </div>
+    <div formGroupName="address">
+      <div class="flex flex-column md:flex-row gap-3">
+        <div>
+          <label class="p-float-label" for="street">Strasse/Nr.</label>
+          <input pInputText id="street" formControlName="street" />
+        </div>
+        <div>
+          <label class="p-float-label" for="addressLine2">Adresszusatz</label>
+          <input pInputText id="addressLine2" formControlName="addressLine2" />
+        </div>
+      </div>
+      <div class="flex flex-column md:flex-row gap-3">
+        <div>
+          <label class="p-float-label" for="postalCode">Postleitzahl</label>
+          <input pInputText id="postalCode" formControlName="postalCode" />
+        </div>
+        <div>
+          <label class="p-float-label" for="city">City</label>
+          <input pInputText id="city" formControlName="city" />
+        </div>
+        <div>
+        <label class="p-float-label" for="country">Land</label>
+        <p-dropdown
+          [options]="countryList"
+          [(ngModel)]="selectedCountry"
+          formControlName="country"
+          optionLabel="label"
+          [showClear]="true"
+        ></p-dropdown>
+        </div>
+      </div>
+    </div>
 
     <button
       pButton

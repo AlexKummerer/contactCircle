@@ -21,6 +21,8 @@ import { patchState, signalState } from '@ngrx/signals';
 import { state } from '@angular/animations';
 import { Observable } from 'rxjs';
 import { Contact } from '../../../models/contact.model';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
   selector: 'app-contacts-edit',
@@ -35,6 +37,8 @@ import { Contact } from '../../../models/contact.model';
     InputTextModule,
     MessagesModule,
     AsyncPipe,
+    CalendarModule,
+    DropdownModule,
   ],
   templateUrl: './contacts-edit.component.html',
   styleUrl: './contacts-edit.component.scss',
@@ -43,6 +47,25 @@ export class ContactsEditComponent implements OnInit {
   contactForm: FormGroup;
   errorMessage: WritableSignal<Message[]> = signal([]);
   errorMessageValue: Message[] = [];
+  birthdate: Date | undefined;
+  jobStatusList = [
+    { label: 'Angestellt' },
+    { label: 'Selbstständig' },
+    { label: 'Schüler' },
+  ];
+  selectedJobStatus: any;
+  genderStatusList = [
+    { label: 'Männlich' },
+    { label: 'Weiblich' },
+    { label: 'Divers' },
+  ];
+  selectedGenderStatus: any;
+  countryList = [
+    { label: 'Deutschland' },
+    { label: 'Österreich' },
+    { label: 'Schweiz' },
+  ];
+  selectedCountry: any;
 
   constructor(private formBuilder: FormBuilder) {
     this.contactForm = this.formBuilder.group({
@@ -50,8 +73,18 @@ export class ContactsEditComponent implements OnInit {
       firstName: [''],
       lastName: [''],
       nickname: [''],
-      phone: ['', Validators.compose([Validators.pattern('^[0-9]*$')])],
-      phone2: ['', Validators.compose([Validators.pattern('^[0-9]*$')])],
+      phone: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
+      phone2: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
+      birthdate: [''],
+      jobStatus: [''],
+      gender: [''],
+      address: this.formBuilder.group({
+        street: [''],
+        addressLine2: [''],
+        postalCode: [''],
+        city: [''],
+        country: [''],
+      }),
       // Add other form controls here based on your model
     });
   }
@@ -62,8 +95,18 @@ export class ContactsEditComponent implements OnInit {
       firstName: [''],
       lastName: [''],
       nickname: [''],
-      phone: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$'),])],
+      phone: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
       phone2: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
+      birthdate: [''],
+      jobStatus: [''],
+      gender: [''],
+      address: this.formBuilder.group({
+        street: [''],
+        addressLine2: [''],
+        postalCode: [''],
+        city: [''],
+        country: [''],
+      }),
       // Add other form controls here based on your model
     });
   }
@@ -80,27 +123,26 @@ export class ContactsEditComponent implements OnInit {
         this.contactForm.controls['email'].value,
         this.contactForm.controls['phone'].value,
         this.contactForm.controls['phone2'].value,
-        null,
-        null,
-        null,
+        this.contactForm.controls['birthdate'].value,
+        this.contactForm.controls['jobStatus'].value,
+        this.contactForm.controls['gender'].value,
         {
-          street: '',
-          addressLine2: '',
-          postalCode: '',
-          city: '',
-          country: '',
+          street: this.contactForm.controls['address'].value.street,
+          addressLine2: this.contactForm.controls['address'].value.addressLine2,
+          postalCode: this.contactForm.controls['address'].value.postalCode,
+          city: this.contactForm.controls['address'].value.city,
+          country: this.contactForm.controls['address'].value.country,
         }
       );
       console.log(contact);
-
-      console.log(this.contactForm);
     } else {
       this.errorMessage.update((state) => [
         ...state,
         {
           severity: 'error',
-          summary: 'Error Message',
-          detail: 'Please enter at least one field',
+          summary: 'Fehler beim Speichern des Kontakts',
+          detail:
+            'Bitte füllen Sie mindestens eines der folgenden Felder aus: Vorname, Nachname oder Spitzname.',
         },
       ]);
 

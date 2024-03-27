@@ -3,7 +3,7 @@ import { CardModule } from 'primeng/card';
 import { ContactsListComponent } from './contacts-list/contacts-list.component';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-contacts',

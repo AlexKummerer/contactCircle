@@ -7,12 +7,16 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 30px;
+
+    :hover {
+      box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+    }
   }
 
   .feature-card {
     padding: 0 1rem;
     border-radius: 1rem;
-    box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.1);
     margin:  1rem;
     flex: 0 1 300px;
     height: 300px;
@@ -21,10 +25,13 @@
       border-radius: 1rem;
     }
 
+
+
     i {
       font-size: 2em;
       margin-top: 10px;
     }
+
 
     @media only screen and (max-width: 600px) {
      /* Display one card per row */
@@ -35,6 +42,6 @@
   .disabled {
     pointer-events: none;
     cursor: default;
-    // opacity: 0.6;
+    opacity: 0.6;
   }
 }

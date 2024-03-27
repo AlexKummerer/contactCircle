@@ -25,7 +25,6 @@ public features :Feature[] = [
         'erwalten Sie Ihre Kontakte effizient und organisieren Sie sie in  benutzerdefinierten Gruppen',
       icon: 'pi pi-users',
       link: '/contacts',
-      disabled: true,
     },
     {
       title: 'Protokolle',
