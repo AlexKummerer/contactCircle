@@ -1,8 +1,6 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import {
-  Form,
   FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -15,15 +13,17 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { Message } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { patchState, signalState } from '@ngrx/signals';
-import { state } from '@angular/animations';
-import { Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 import { Contact } from '../../../models/contact.model';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { JobStatus, JobStatusLabels } from '../../../enums/jobstatus';
+import { Gender, GenderLabels } from '../../../enums/gender';
+import { Store } from '@ngrx/store';
+import * as fromApp from '../../../store/app.reducer';
+import * as CountryActions from '../../../store/country/country.actions';
+import { Country } from '../../../models/country.model';
+import { Subscription, map } from 'rxjs';
 @Component({
   selector: 'app-contacts-edit',
   standalone: true,
@@ -43,80 +43,58 @@ import { DropdownModule } from 'primeng/dropdown';
   templateUrl: './contacts-edit.component.html',
   styleUrl: './contacts-edit.component.scss',
 })
-export class ContactsEditComponent implements OnInit {
-  contactForm: FormGroup;
+export class ContactsEditComponent implements OnInit, OnDestroy {
+  contactForm!: FormGroup;
   errorMessage: WritableSignal<Message[]> = signal([]);
   errorMessageValue: Message[] = [];
-  birthdate: Date | undefined;
-  jobStatusList = [
-    { label: 'Angestellt' },
-    { label: 'Selbstständig' },
-    { label: 'Schüler' },
-  ];
-  selectedJobStatus: any;
-  genderStatusList = [
-    { label: 'Männlich' },
-    { label: 'Weiblich' },
-    { label: 'Divers' },
-  ];
-  selectedGenderStatus: any;
-  countryList = [
-    { label: 'Deutschland' },
-    { label: 'Österreich' },
-    { label: 'Schweiz' },
-  ];
-  selectedCountry: any;
+  jobStatusList = JobStatusLabels;
+  genderStatusList = GenderLabels;
+  countryList: Country[] = [];
+  subscription!: Subscription;
 
-  constructor(private formBuilder: FormBuilder) {
-    this.contactForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.email])],
-      firstName: [''],
-      lastName: [''],
-      nickname: [''],
-      phone: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
-      phone2: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
-      birthdate: [''],
-      jobStatus: [''],
-      gender: [''],
-      address: this.formBuilder.group({
-        street: [''],
-        addressLine2: [''],
-        postalCode: [''],
-        city: [''],
-        country: [''],
-      }),
-      // Add other form controls here based on your model
-    });
-  }
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private store: Store<fromApp.AppState>
+  ) {}
 
   ngOnInit(): void {
+    this.store.dispatch(CountryActions.loadCountries());
+    this.store.select('country').pipe(map(countryState => countryState.countries )).subscribe((country: Country[]) => {
+      // country.sort((a, b) => a.name.localeCompare(b.name));
+
+      this.countryList = [...country]
+      this.countryList =this.countryList.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
     this.contactForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.email])],
-      firstName: [''],
-      lastName: [''],
-      nickname: [''],
-      phone: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
-      phone2: ['', Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
-      birthdate: [''],
-      jobStatus: [''],
-      gender: [''],
+      email: [null, Validators.compose([Validators.email])],
+      firstName: [null],
+      lastName: [null],
+      nickname: [null],
+      phone: [null, Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
+      phone2: [null, Validators.compose([Validators.pattern('^\\+?[0-9]*$')])],
+      birthdate: [null],
+      jobStatus: [null],
+      gender: [null],
       address: this.formBuilder.group({
-        street: [''],
-        addressLine2: [''],
-        postalCode: [''],
-        city: [''],
-        country: [''],
+        street: [null],
+        addressLine2: [null],
+        postalCode: [null],
+        city: [null],
+        country: [{ value: {name: "Deutschland", code : "DE" }, disabled: false }],
       }),
       // Add other form controls here based on your model
     });
   }
   onSaveButtonClick() {
     if (
-      this.contactForm.controls['firstName'].value !== '' ||
-      this.contactForm.controls['lastName'].value !== '' ||
-      this.contactForm.controls['nickname'].value !== ''
+      this.contactForm.controls['firstName'].value ||
+      this.contactForm.controls['lastName'].value ||
+      this.contactForm.controls['nickname'].value
     ) {
-      let contact = new Contact(
+
+      const contact = new Contact(
         null,
         this.contactForm.controls['firstName'].value,
         this.contactForm.controls['lastName'].value,
@@ -124,17 +102,19 @@ export class ContactsEditComponent implements OnInit {
         this.contactForm.controls['phone'].value,
         this.contactForm.controls['phone2'].value,
         this.contactForm.controls['birthdate'].value,
-        this.contactForm.controls['jobStatus'].value,
-        this.contactForm.controls['gender'].value,
+        this.contactForm.controls['jobStatus'] ?.value?.['value']
+          ? (this.contactForm.controls['jobStatus']?.value?.['value'] as JobStatus)
+          : (this.contactForm.controls['jobStatus']?.value as string),
+        this.contactForm.controls['gender']?.value?.['value'] ?
+        this.contactForm.controls['gender']?.value['value']  as Gender :  undefined,
         {
           street: this.contactForm.controls['address'].value.street,
           addressLine2: this.contactForm.controls['address'].value.addressLine2,
           postalCode: this.contactForm.controls['address'].value.postalCode,
           city: this.contactForm.controls['address'].value.city,
-          country: this.contactForm.controls['address'].value.country,
+          country: this.contactForm.controls['address'].value.country['code'],
         }
       );
-      console.log(contact);
     } else {
       this.errorMessage.update((state) => [
         ...state,
@@ -150,8 +130,12 @@ export class ContactsEditComponent implements OnInit {
     }
   }
 
-  onMessageClose(event: any) {
+  onMessageClose(event: Message[]) {
     this.errorMessage.update(() => [...event]);
     this.errorMessageValue = this.errorMessage();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

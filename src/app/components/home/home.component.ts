@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 
@@ -17,7 +17,7 @@ export interface Feature {
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent{
 public features :Feature[] = [
     {
       title: 'Kontaktverwaltung',
@@ -51,5 +51,4 @@ public features :Feature[] = [
 
   constructor() {}
 
-  ngOnInit(): void {}
 }

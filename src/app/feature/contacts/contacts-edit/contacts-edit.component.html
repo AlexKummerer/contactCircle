@@ -7,7 +7,7 @@
     [enableService]="false"
   ></p-messages>
   }
-  <form [formGroup]="contactForm">
+  <form [formGroup]="contactForm" (submit)="onSaveButtonClick()" >
     <div class="flex">
       <div class="flex flex-column gap-2">
         <label class="p-float-label" for="email">Email</label>
@@ -48,35 +48,25 @@
     <div class="flex flex-column md:flex-row gap-3">
       <div>
         <label class="p-float-label" for="birthdate">Geburtsdatum</label>
-        <p-calendar
-          [(ngModel)]="birthdate"
-          formControlName="birthdate"
-          [showIcon]="true"
-        ></p-calendar>
-
-        <!-- <input
-          pInputText
-          id="birthDate"
-          formControlName="birthDate"
-        /> -->
+        <p-calendar formControlName="birthdate" [showIcon]="true"></p-calendar>
       </div>
       <div>
         <label class="p-float-label" for="jobStatus">Job-Status</label>
         <p-dropdown
           [options]="jobStatusList"
-          [(ngModel)]="selectedJobStatus"
           formControlName="jobStatus"
           optionLabel="label"
-          [showClear]="true"
+          placeholder="Job-Status auswählen"
+          [editable]="true"
         ></p-dropdown>
       </div>
       <div>
         <label class="p-float-label" for="gender">Geschlecht</label>
         <p-dropdown
           [options]="genderStatusList"
-          [(ngModel)]="selectedGenderStatus"
           formControlName="gender"
           optionLabel="label"
+          placeholder="Geschlecht auswählen"
           [showClear]="true"
         ></p-dropdown>
       </div>
@@ -102,25 +92,32 @@
           <input pInputText id="city" formControlName="city" />
         </div>
         <div>
-        <label class="p-float-label" for="country">Land</label>
-        <p-dropdown
-          [options]="countryList"
-          [(ngModel)]="selectedCountry"
-          formControlName="country"
-          optionLabel="label"
-          [showClear]="true"
-        ></p-dropdown>
+          <label class="p-float-label" for="country">Land</label>
+          <p-dropdown
+            class="p-component"
+            [options]="countryList"
+            formControlName="country"
+            optionLabel="name"
+            placeholder="Land auswählen"
+            [showClear]="false"
+          >
+
+          </p-dropdown>
         </div>
       </div>
     </div>
 
     <button
-      pButton
-      type="button"
-      label="Save"
-      [disabled]="contactForm.invalid"
-      class="p-button-success"
-      (click)="onSaveButtonClick()"
-    ></button>
+    pButton
+    type="submit"
+    label="Save"
+    [disabled]="contactForm.invalid"
+    class="p-button-success mt-5"
+
+  >
+    {{ "" }}
+  </button>
   </form>
+
+
 </p-card>

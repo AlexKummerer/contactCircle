@@ -1,14 +1,15 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommonModule } from '@angular/common';
+import * as fromApp from './store/app.reducer';
+import { CountryEffects } from './store/country/country.effects';
+import { HttpClientModule } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), importProvidersFrom(BrowserAnimationsModule) ,provideStore(), provideEffects()],
+  providers: [provideRouter(routes), importProvidersFrom(BrowserAnimationsModule, HttpClientModule) ,provideStore(fromApp.appReducer), provideEffects([CountryEffects])],
 
 
 };
