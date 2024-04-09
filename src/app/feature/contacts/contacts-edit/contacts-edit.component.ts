@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  WritableSignal,
+  signal,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,6 +30,7 @@ import * as fromApp from '../../../store/app.reducer';
 import * as CountryActions from '../../../store/country/country.actions';
 import { Country } from '../../../models/country.model';
 import { Subscription, map } from 'rxjs';
+import * as ContactActions from '../../../store/contacts/contacts.actions';
 @Component({
   selector: 'app-contacts-edit',
   standalone: true,
@@ -52,7 +59,6 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
   countryList: Country[] = [];
   subscription!: Subscription;
 
-
   constructor(
     private formBuilder: FormBuilder,
     private store: Store<fromApp.AppState>
@@ -60,12 +66,17 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.store.dispatch(CountryActions.loadCountries());
-    this.store.select('country').pipe(map(countryState => countryState.countries )).subscribe((country: Country[]) => {
-      // country.sort((a, b) => a.name.localeCompare(b.name));
+    this.store
+      .select('country')
+      .pipe(map((countryState) => countryState.countries))
+      .subscribe((country: Country[]) => {
+        // country.sort((a, b) => a.name.localeCompare(b.name));
 
-      this.countryList = [...country]
-      this.countryList =this.countryList.sort((a, b) => a.name.localeCompare(b.name));
-    });
+        this.countryList = [...country];
+        this.countryList = this.countryList.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      });
 
     this.contactForm = this.formBuilder.group({
       email: [null, Validators.compose([Validators.email])],
@@ -82,7 +93,9 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
         addressLine2: [null],
         postalCode: [null],
         city: [null],
-        country: [{ value: {name: "Deutschland", code : "DE" }, disabled: false }],
+        country: [
+          { value: { name: 'Deutschland', code: 'DE' }, disabled: false },
+        ],
       }),
       // Add other form controls here based on your model
     });
@@ -93,7 +106,6 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
       this.contactForm.controls['lastName'].value ||
       this.contactForm.controls['nickname'].value
     ) {
-
       const contact = new Contact(
         null,
         this.contactForm.controls['firstName'].value,
@@ -102,11 +114,14 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
         this.contactForm.controls['phone'].value,
         this.contactForm.controls['phone2'].value,
         this.contactForm.controls['birthdate'].value,
-        this.contactForm.controls['jobStatus'] ?.value?.['value']
-          ? (this.contactForm.controls['jobStatus']?.value?.['value'] as JobStatus)
+        this.contactForm.controls['jobStatus']?.value?.['value']
+          ? (this.contactForm.controls['jobStatus']?.value?.[
+              'value'
+            ] as JobStatus)
           : (this.contactForm.controls['jobStatus']?.value as string),
-        this.contactForm.controls['gender']?.value?.['value'] ?
-        this.contactForm.controls['gender']?.value['value']  as Gender :  undefined,
+        this.contactForm.controls['gender']?.value?.['value']
+          ? (this.contactForm.controls['gender']?.value['value'] as Gender)
+          : undefined,
         {
           street: this.contactForm.controls['address'].value.street,
           addressLine2: this.contactForm.controls['address'].value.addressLine2,
@@ -115,6 +130,8 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
           country: this.contactForm.controls['address'].value.country['code'],
         }
       );
+        this.store.dispatch(ContactActions.addContact({ contact }));
+
     } else {
       this.errorMessage.update((state) => [
         ...state,
@@ -136,6 +153,6 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    if (this.subscription) this.subscription.unsubscribe()
   }
 }

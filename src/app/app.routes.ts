@@ -5,7 +5,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
 
- { path: 'contacts', loadChildren: () => import('./feature/contacts/contacts.module').then(m => m.ContactsModule) }
+ { path: 'contacts', loadChildren: () => import('./feature/contacts/contacts.routes').then(m => m.routes) }
   // { path: 'appointments', component: AppointmentsComponent },
   // { path: 'tasks', component: TasksComponent }
 ];

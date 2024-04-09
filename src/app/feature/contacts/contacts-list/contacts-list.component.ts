@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
+import * as fromApp from '../../../store/app.reducer';
+import { Contact } from '../../../models/contact.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-contacts-list',
@@ -8,37 +12,20 @@ import { TableModule } from 'primeng/table';
   templateUrl: './contacts-list.component.html',
   styleUrl: './contacts-list.component.scss',
 })
-export class ContactsListComponent {
-  contacts = [
-    {
-      id: 1,
-      name: 'Max Mustermann',
-      email: 'max.mustermann@example.com',
-      phone: '1234567890',
-    },
-    {
-      id: 2,
-      name: 'Erika Mustermann',
-      email: 'erika.mustermann@example.com',
-      phone: '0987654321',
-    },
-    {
-      id: 3,
-      name: 'John Doe',
-      email: '',
-      phone: '5555555555',
-    },
-    {
-      id: 4,
-      name: 'Jane Doe',
-      email: '',
-      phone: '4444444444',
-    },
-    {
-      id: 5,
-      name: 'Alice',
-      email: '',
-      phone: '1234567890',
-    },
-  ];
+export class ContactsListComponent implements OnInit, OnDestroy {
+  //
+  contacts: Contact[] = [];
+  private storeSub!: Subscription;
+  constructor(private store: Store<fromApp.AppState>) {}
+  ngOnInit() {
+    this.storeSub = this.store.select('contact').subscribe((state) => {
+      this.contacts = state.contacts;
+    });
+    console.log(this.contacts);
+
+  }
+
+  ngOnDestroy(): void {
+    this.storeSub.unsubscribe();
+  }
 }
