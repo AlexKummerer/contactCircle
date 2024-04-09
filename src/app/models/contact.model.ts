@@ -1,8 +1,9 @@
 import { Gender } from "../enums/gender";
 import { JobStatus } from "../enums/jobstatus";
+import { v4 as uuidv4 } from 'uuid';
 
 export class Contact {
-  id: number | null; // Unique identifier for the contact
+  id: string | null; // Unique identifier for the contact
   firstName?: string; // First name of the contact
   lastName?: string; // Last name of the contact
   nickname?: string; // Nickname of the contact (optional)
@@ -23,7 +24,7 @@ export class Contact {
 
 
   constructor(
-    id: number| null ,
+    id: string| null ,
     firstName: string ,
     lastName: string ,
     email: string ,
@@ -40,7 +41,7 @@ export class Contact {
       country: string;
     }
   ) {
-    this.id = id;
+    this.id = id ? id : uuidv4()
     this.firstName = firstName ?? undefined;
     this.lastName = lastName ?? undefined;
     this.email = email ?? undefined;

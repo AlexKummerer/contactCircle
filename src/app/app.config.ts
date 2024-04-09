@@ -9,13 +9,14 @@ import { CountryEffects } from './store/country/country.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { ContactEffects } from './store/contacts/contacts.effect';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     importProvidersFrom(BrowserAnimationsModule, HttpClientModule),
     provideStore(fromApp.appReducer),
-    provideEffects([CountryEffects]),
+    provideEffects([CountryEffects, ContactEffects]),
     importProvidersFrom(StoreDevtoolsModule.instrument({logOnly: environment.production})),
   ],
 };

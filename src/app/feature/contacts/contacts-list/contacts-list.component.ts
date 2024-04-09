@@ -4,6 +4,7 @@ import { TableModule } from 'primeng/table';
 import * as fromApp from '../../../store/app.reducer';
 import { Contact } from '../../../models/contact.model';
 import { Subscription } from 'rxjs';
+import * as ContactActions from '../../../store/contacts/contacts.actions';
 
 @Component({
   selector: 'app-contacts-list',
@@ -18,6 +19,7 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   private storeSub!: Subscription;
   constructor(private store: Store<fromApp.AppState>) {}
   ngOnInit() {
+    this.store.dispatch(ContactActions.getContacts());
     this.storeSub = this.store.select('contact').subscribe((state) => {
       this.contacts = state.contacts;
     });

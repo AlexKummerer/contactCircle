@@ -70,8 +70,6 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
       .select('country')
       .pipe(map((countryState) => countryState.countries))
       .subscribe((country: Country[]) => {
-        // country.sort((a, b) => a.name.localeCompare(b.name));
-
         this.countryList = [...country];
         this.countryList = this.countryList.sort((a, b) =>
           a.name.localeCompare(b.name)
@@ -106,32 +104,25 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
       this.contactForm.controls['lastName'].value ||
       this.contactForm.controls['nickname'].value
     ) {
+      const formValues = this.contactForm.value;
       const contact = new Contact(
         null,
-        this.contactForm.controls['firstName'].value,
-        this.contactForm.controls['lastName'].value,
-        this.contactForm.controls['email'].value,
-        this.contactForm.controls['phone'].value,
-        this.contactForm.controls['phone2'].value,
-        this.contactForm.controls['birthdate'].value,
-        this.contactForm.controls['jobStatus']?.value?.['value']
-          ? (this.contactForm.controls['jobStatus']?.value?.[
-              'value'
-            ] as JobStatus)
-          : (this.contactForm.controls['jobStatus']?.value as string),
-        this.contactForm.controls['gender']?.value?.['value']
-          ? (this.contactForm.controls['gender']?.value['value'] as Gender)
+        formValues.firstName,
+        formValues.lastName,
+        formValues.email,
+        formValues.phone,
+        formValues.phone2,
+        formValues.birthdate,
+        formValues.jobStatus?.value
+          ? (formValues.jobStatus.value as JobStatus)
+          : (formValues.jobStatus as string),
+        formValues.gender?.value
+          ? (formValues.gender.value as Gender)
           : undefined,
-        {
-          street: this.contactForm.controls['address'].value.street,
-          addressLine2: this.contactForm.controls['address'].value.addressLine2,
-          postalCode: this.contactForm.controls['address'].value.postalCode,
-          city: this.contactForm.controls['address'].value.city,
-          country: this.contactForm.controls['address'].value.country['code'],
-        }
+        { ...formValues.address, country: formValues.address.country.code }
       );
-        this.store.dispatch(ContactActions.addContact({ contact }));
 
+      this.store.dispatch(ContactActions.addContact({ contact }));
     } else {
       this.errorMessage.update((state) => [
         ...state,
@@ -153,6 +144,6 @@ export class ContactsEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) this.subscription.unsubscribe()
+    if (this.subscription) this.subscription.unsubscribe();
   }
 }

@@ -1,12 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 import { Contact } from '../../models/contact.model';
 
-export const GET_CONTACTS = '[Country] Get Contacts';
-export const GET_CONTACTS_SUCCESS = '[Country] Get Contacts Success';
-export const GET_CONTACTS_FAILURE = '[Country] Get Contacts Failure';
-export const GET_CONTACTS_BY_ID = '[Country] Get Contacts By Id';
-export const ADD_CONTACT = '[Country] Add Contact';
-export const UPDATE_CONTACT = '[Country] Update Contact';
+export const GET_CONTACTS = '[Contacts] Get Contacts';
+export const GET_CONTACTS_SUCCESS = '[Contacts] Get Contacts Success';
+export const GET_CONTACTS_FAILURE = '[Contacts] Get Contacts Failure';
+export const GET_CONTACTS_BY_ID = '[Contacts] Get Contacts By Id';
+export const ADD_CONTACT = '[Contacts] Add Contact';
+export const UPDATE_CONTACT = '[Contacts] Update Contact';
+export const UPDATE_CONTACT_SUCCESS = "[Contacts] Update Contact Sucess";
 export const DELETE_CONTACT = '[Country] Delete Contact';
 
 export const getContacts = createAction(GET_CONTACTS);
@@ -20,7 +21,7 @@ export const getContactsFailure = createAction(
 );
 export const getContactsById = createAction(
   GET_CONTACTS_BY_ID,
-  props<{ id: number }>()
+  props<{ id: string }>()
 );
 export const addContact = createAction(
   ADD_CONTACT,
@@ -30,9 +31,15 @@ export const updateContact = createAction(
   UPDATE_CONTACT,
   props<{ contact: Contact }>()
 );
+
+export const updatedContactSuccess = createAction(
+  UPDATE_CONTACT_SUCCESS,
+  props<{ contacts: Contact[], redirect: boolean }>()
+)
+
 export const deleteContact = createAction(
   DELETE_CONTACT,
-  props<{ id: number }>()
+  props<{ id: string }>()
 );
 
 

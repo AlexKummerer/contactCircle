@@ -27,6 +27,7 @@
     "primeng": "17.11",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
+    "uuid": "^9.0.1",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@angular/compiler-cli": "^17.3.0",
     "@ngrx/store-devtools": "^17.1.1",
     "@types/jasmine": "~5.1.0",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "7.2.0",
     "@typescript-eslint/parser": "7.2.0",
     "eslint": "^8.57.0",
