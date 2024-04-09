@@ -1,16 +1,36 @@
 <p-table [value]="contacts" [paginator]="true" [rows]="5">
+  <ng-template pTemplate="caption">
+    <div style="text-align: left">
+      <p-multiSelect
+        [options]="cols"
+        [(ngModel)]="selectedColumns"
+        optionLabel="header"
+        selectedItemsLabel="{0} columns selected"
+        [style]="{ width: '20rm' }"
+        defaultLabel="Choose Columns"
+        display="chip"
+      ></p-multiSelect>
+    </div>
+  </ng-template>
+@if (this.cols && this.selectedColumns && this.selectedColumns.length > 0) {
   <ng-template pTemplate="header">
     <tr>
-      <th>Name</th>
-      <th>Phone</th>
-      <th>Email</th>
+      @for (col of orderedSelectedColumns; track $index) {
+      <th>
+        {{ col.header }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+
+      </th>
+       }
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-contact>
     <tr>
-      <td>{{contact.firstName}}</td>
-      <td>{{contact.phoneNumber}}</td>
-      <td>{{contact.email}}</td>
+   @for (col of orderedSelectedColumns; track $index) {
+      <td>{{ contact[col.field]  }}</td>
+   }
+  
     </tr>
   </ng-template>
+}
 </p-table>
